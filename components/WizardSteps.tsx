@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { StepProps, QuizData } from '../types';
-import { Heart, Send, Copy, ArrowRight } from 'lucide-react';
+import { Heart, Copy, ArrowRight } from 'lucide-react';
 
 // Animation variants for container
 const containerVariants: Variants = {
