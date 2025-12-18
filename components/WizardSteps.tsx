@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { StepProps, QuizData } from '../types';
 import { Heart, Send, Copy, ArrowRight } from 'lucide-react';
 
 // Animation variants for container
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0, y: 20, scale: 0.95 },
   visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 300, damping: 20 } },
   exit: { opacity: 0, y: -20, scale: 0.95 }
@@ -141,7 +141,7 @@ export const VibeCheckStep: React.FC<StepProps> = ({ data, updateData, onNext })
       <div className="space-y-3">
         <p className="font-heading text-gray-600 text-center">Style đi chơi?</p>
         <div className="grid grid-cols-2 gap-3">
-          {['Bánh bèo công chúa 🎀', 'Năng động cool ngầu 😎','Thích cả hai (QUÁ LÀ THAM LAM)'].map((opt) => (
+          {['Bánh bèo công chúa 🎀', 'Năng động cool ngầu 😎'].map((opt) => (
             <motion.button
               key={opt}
               whileTap={{ scale: 0.95 }}
@@ -327,17 +327,17 @@ Yêu anh đi đừng ngại! 😘
   };
 
   const handleSend = () => {
-     // WhatsApp link (standard fallback)
-     // Since Zalo doesn't have a direct "send text" URL scheme that works reliably across devices without an SDK, 
-     // Copy to clipboard is the safest mobile-web approach for Gen Z in Vietnam, but we can try a mailto or just rely on Copy.
-     handleCopy();
-     // If we wanted to open a general share:
-     if (navigator.share) {
-       navigator.share({
-         title: `Hồ sơ của ${data.nickname}`,
-         text: generateMessage()
-       }).catch(console.error);
-     }
+     // Copy to clipboard first so she can paste it in the chat
+     const msg = generateMessage();
+     navigator.clipboard.writeText(msg).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 3000);
+        // Open Facebook profile link
+        window.open('https://www.facebook.com/ming.jin.77454/', '_blank');
+     }).catch(() => {
+        // Fallback if copy fails, still open link
+        window.open('https://www.facebook.com/ming.jin.77454/', '_blank');
+     });
   };
 
   return (
@@ -362,7 +362,7 @@ Yêu anh đi đừng ngại! 😘
       <div className="flex flex-col gap-3 pt-2">
         <BouncyButton onClick={handleCopy} className={`w-full flex items-center justify-center gap-2 ${copied ? 'bg-green-400' : 'bg-white text-secondary'}`}>
            {copied ? (
-             <>Đã copy! Gửi Zalo nha ✅</>
+             <>Đã copy! Bấm vào link dưới và Gửi cho anh nha ✅</>
            ) : (
              <><Copy size={20} /> Copy kết quả</>
            )}
